@@ -1,12 +1,14 @@
-import { React, useState } from "react";
+import { React, use, useState } from "react";
 import { useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import InputItem from "../components/form/InputItem";
 import SelectItem from "../components/form/SelectItem";
-import CheckBoxItem from "../components/form/CheckBoxItem";
+import CheckBoxRadioItem from "../components/form/CheckBoxRadioItem";
+import TextArea from "../components/form/TextArea";
 
 function Profile({ userData, setUserData, closeProfileModal }) {
   const [roles, setRoles] = useState(["STUDENT", "INSTRUCTOR"]);
+  const [passBtn, setPassBtn] = useState(false);
   const {
     register,
     handleSubmit,
@@ -36,6 +38,13 @@ function Profile({ userData, setUserData, closeProfileModal }) {
 
   useEffect(() => {
     console.log(getValues());
+    console.log(getValues("isCheckPass"));
+    if (getValues("isCheckPass") === "true") {
+      console.log("open");
+      setPassBtn(true);
+    } else {
+      setPassBtn(false);
+    }
   }, [watchForm]);
 
   return (
@@ -58,21 +67,47 @@ function Profile({ userData, setUserData, closeProfileModal }) {
           />
         </div>
 
+        {passBtn ? (
+          <div className="mb-3">
+            <InputItem
+              id="password"
+              type="password"
+              errors={errors}
+              labelText="密碼"
+              register={register}
+              rules={{}}
+            />
+          </div>
+        ) : (
+          <div className="mb-3">
+            <InputItem
+              id="password"
+              type="password"
+              errors={errors}
+              labelText="密碼"
+              register={register}
+              rules={{
+                required: "使用者名稱為密碼",
+                minLength: {
+                  value: 5,
+                  message: "密碼不得小於10個字元",
+                },
+                disabled: true,
+              }}
+            />
+          </div>
+        )}
+
         <div className="mb-3">
-          <InputItem
-            id="password"
-            type="password"
-            errors={errors}
-            labelText="密碼"
+          <CheckBoxRadioItem
+            type="checkbox"
+            name="isCheckPass"
+            id="isCheckPass"
+            value={true}
             register={register}
-            rules={{
-              // required: { value: true, message: "使用者必填密碼" },
-              required: "使用者名稱為密碼",
-              minLength: {
-                value: 5,
-                message: "密碼不得小於10個字元",
-              },
-            }}
+            errors={errors}
+            rules={{ required: false }}
+            labelText="更改密碼"
           />
         </div>
 
@@ -99,7 +134,7 @@ function Profile({ userData, setUserData, closeProfileModal }) {
 
         <div className="mb-3">
           <div className="form-label">性別</div>
-          <CheckBoxItem
+          <CheckBoxRadioItem
             type="radio"
             name="sexual"
             id="men"
@@ -109,7 +144,7 @@ function Profile({ userData, setUserData, closeProfileModal }) {
             rules={{ required: "請選擇您的性別" }}
             labelText="男"
           />
-          <CheckBoxItem
+          <CheckBoxRadioItem
             type="radio"
             name="sexual"
             id="female"
@@ -119,7 +154,7 @@ function Profile({ userData, setUserData, closeProfileModal }) {
             rules={{ required: "請選擇您的性別" }}
             labelText="女"
           />
-          <CheckBoxItem
+          <CheckBoxRadioItem
             type="radio"
             name="sexual"
             id="other"
@@ -131,9 +166,22 @@ function Profile({ userData, setUserData, closeProfileModal }) {
           />
         </div>
 
-        {/* <button type="submit" className="btn btn-info">
-          註冊
-        </button> */}
+        <div className="mb-3">
+          <TextArea
+            id="brief"
+            labelText="自我介紹"
+            register={register}
+            errors={errors}
+            rules={{
+              maxLength: {
+                value: 100,
+                message: "自我介紹不超過 100 字",
+              },
+            }}
+            row="5"
+          />
+        </div>
+
         <div className="row row-cols-2 g-0 ">
           <div className="col-6">
             <button type="submit" className="btn btn-info">

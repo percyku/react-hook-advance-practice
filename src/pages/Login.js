@@ -1,12 +1,13 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import InputItem from "../components/form/InputItem";
 import SelectItem from "../components/form/SelectItem";
-import AuthService from "../services/auth.service";
-import { useEffect } from "react";
-import { useForm, useWatch } from "react-hook-form";
+import CheckBoxRadioItem from "../components/form/CheckBoxRadioItem";
+//import AuthService from "../services/auth.service";
 
 function Login() {
   const [roles, setRoles] = useState(["STUDENT", "INSTRUCTOR"]);
+  const [errorMsg, setErrorMsg] = useState("");
   const {
     register,
     handleSubmit,
@@ -25,19 +26,21 @@ function Login() {
   const onSubmit = async (data) => {
     console.log("submit", data);
 
-    const baToken = "Basic " + window.btoa(data.username + ":" + data.password);
+    //just try to connect background test
+    // const baToken = "Basic " + window.btoa(data.username + ":" + data.password);
 
-    try {
-      let response = await AuthService.loginforLearnSys(
-        baToken,
-        `ROLE_${data.role}`
-      );
-      console.log(response);
-    } catch (e) {
-      console.log("error", e);
-      console.log("error", e.status);
-      console.log("error", e.message);
-    }
+    // try {
+    //   let response = await AuthService.loginforLearnSys(
+    //     baToken,
+    //     `ROLE_${data.role}`
+    //   );
+    //   console.log(response);
+    // } catch (e) {
+    //   console.log("error", e);
+    //   console.log("error", e.status);
+    //   console.log("error", e.message);
+    //   setErrorMsg("登入異常");
+    // }
   };
 
   const watchForm = useWatch({
@@ -52,6 +55,7 @@ function Login() {
 
   return (
     <>
+      {errorMsg && <div className="alert alert-danger">{errorMsg}</div>}
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-3">
           <InputItem
@@ -106,6 +110,19 @@ function Login() {
               );
             })}
           </SelectItem>
+        </div>
+
+        <div className="mb-3">
+          <CheckBoxRadioItem
+            type="checkbox"
+            name="isCheckForm"
+            id="isCheckForm"
+            value={true}
+            register={register}
+            errors={errors}
+            rules={{ required: false }}
+            labelText="確認保持登入"
+          />
         </div>
 
         <button type="submit" className="btn btn-info">

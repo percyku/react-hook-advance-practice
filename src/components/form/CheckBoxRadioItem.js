@@ -1,6 +1,6 @@
 import React from "react";
 
-const CheckBoxItem = ({
+const CheckBoxRadioItem = ({
   id,
   labelText,
   register,
@@ -33,4 +33,4 @@ const CheckBoxItem = ({
   );
 };
 
-export default CheckBoxItem;
+export default CheckBoxRadioItem;

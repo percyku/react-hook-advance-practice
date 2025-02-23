@@ -1,9 +1,7 @@
-import { React, useState } from "react";
-import { useEffect } from "react";
+import { React, useState, useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import InputItem from "../components/form/InputItem";
 import SelectItem from "../components/form/SelectItem";
-import CheckBoxItem from "../components/form/CheckBoxItem";
 
 function Register() {
   const [roles, setRoles] = useState(["STUDENT", "INSTRUCTOR"]);
