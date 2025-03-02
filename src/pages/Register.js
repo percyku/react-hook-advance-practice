@@ -1,10 +1,14 @@
-import { React, useState, useEffect } from "react";
+import { React, useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { useForm, useWatch } from "react-hook-form";
 import InputItem from "../components/form/InputItem";
 import SelectItem from "../components/form/SelectItem";
+import { Roles, userRegister, UserContext } from "../store";
 
 function Register() {
-  const [roles, setRoles] = useState(["STUDENT", "INSTRUCTOR"]);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [state, dispatch] = useContext(UserContext);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -21,7 +25,7 @@ function Register() {
   });
 
   const onSubmit = async (data) => {
-    console.log("submit", data);
+    console.log("Register submit", data);
 
     // const baToken = "Basic " + window.btoa(data.username + ":" + data.password);
 
@@ -31,11 +35,33 @@ function Register() {
     //     `ROLE_${data.role}`
     //   );
     //   console.log(response);
+    //   navigate("/login");
     // } catch (e) {
     //   console.log("error", e);
     //   console.log("error", e.status);
     //   console.log("error", e.message);
     // }
+
+    let checked = true;
+    userRegister.forEach((item) => {
+      if (data.username === item.username) {
+        checked = false;
+        setErrorMsg("此帳密已經註冊過了");
+      }
+    });
+
+    if (checked) {
+      dispatch({
+        type: "REGISTER",
+        payload: {
+          ...state,
+          username: data.username,
+          password: data.password,
+          role: data.role,
+        },
+      });
+      navigate("/login");
+    }
   };
 
   const watchForm = useWatch({
@@ -50,6 +76,7 @@ function Register() {
 
   return (
     <>
+      {errorMsg && <div className="alert alert-danger">{errorMsg}</div>}
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-3">
           <InputItem
@@ -97,7 +124,7 @@ function Register() {
             }}
           >
             <option value="">請選擇角色</option>
-            {roles.map((role, id) => {
+            {Roles.map((role, id) => {
               return (
                 <option value={role} key={id}>
                   {role}

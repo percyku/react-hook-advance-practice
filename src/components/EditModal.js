@@ -7,15 +7,10 @@ function EditModal({
   saveModal = {},
   footer = "false",
   modalTitle = "Modal Title",
-  otherComponent = {},
+  children,
 }) {
   return (
-    <div
-      className="modal fade"
-      tabIndex="-1"
-      // id={id}
-      ref={modalRef}
-    >
+    <div className="modal fade" tabIndex="-1" ref={modalRef}>
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
@@ -28,7 +23,7 @@ function EditModal({
               aria-label="Close"
             ></button>
           </div>
-          <div className="modal-body">{otherComponent}</div>
+          <div className="modal-body">{children}</div>
 
           {!footer && (
             <div className="modal-footer">

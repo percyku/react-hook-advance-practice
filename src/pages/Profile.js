@@ -1,205 +1,172 @@
-import { React, use, useState } from "react";
+import { React, useState, useRef, useContext } from "react";
 import { useEffect } from "react";
-import { useForm, useWatch } from "react-hook-form";
-import InputItem from "../components/form/InputItem";
-import SelectItem from "../components/form/SelectItem";
-import CheckBoxRadioItem from "../components/form/CheckBoxRadioItem";
-import TextArea from "../components/form/TextArea";
+import { Modal } from "bootstrap";
 
-function Profile({ userData, setUserData, closeProfileModal }) {
-  const [roles, setRoles] = useState(["STUDENT", "INSTRUCTOR"]);
-  const [passBtn, setPassBtn] = useState(false);
-  const {
-    register,
-    handleSubmit,
-    watch,
-    getValues,
-    control,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      ...userData,
-    },
-    mode: "onTouched",
-  });
+import EditModal from "../components/EditModal";
+import ProfileEdit from "./ProfileEdit";
 
-  const onSubmit = async (data) => {
-    console.log("submit", data);
+import { UserContext, Roles } from "../store";
 
-    setUserData(() => {
-      return { ...data };
-    });
-    closeProfileModal();
-  };
-
-  const watchForm = useWatch({
-    control,
-  });
+function Profile() {
+  const [state] = useContext(UserContext);
+  const myModal = useRef(null);
+  const profileModalRef = useRef(null);
+  // const profileModal = useRef(null);
 
   useEffect(() => {
-    console.log(getValues());
-    console.log(getValues("isCheckPass"));
-    if (getValues("isCheckPass") === "true") {
-      console.log("open");
-      setPassBtn(true);
-    } else {
-      setPassBtn(false);
-    }
-  }, [watchForm]);
+    myModal.current = new Modal(profileModalRef.current, {
+      backdrop: "static",
+    });
+    //profileModal.current = new Modal("#EditModalId", { backdrop: "static" });
+  });
+
+  const openProfileModal = () => {
+    myModal.current.show();
+    // profileModal.current.show();
+  };
+
+  const closeProfileModal = () => {
+    console.log("closeProfileModal");
+    myModal.current.hide();
+    // profileModal.current.hide();
+  };
+
+  // const saveProfileModal = async (data) => {
+  //   console.log("submit", data);
+  // };
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form>
         <div className="mb-3">
-          <InputItem
+          <label htmlFor="username" className="form-label">
+            使用者名稱
+          </label>
+          <input
             id="username"
             type="text"
-            errors={errors}
-            labelText="使用者名稱"
-            register={register}
-            rules={{
-              required: "使用者名稱為必填",
-              maxLength: {
-                value: 30,
-                message: "使用者名稱長度不超過 10",
-              },
-            }}
-          />
-        </div>
-
-        {passBtn ? (
-          <div className="mb-3">
-            <InputItem
-              id="password"
-              type="password"
-              errors={errors}
-              labelText="密碼"
-              register={register}
-              rules={{}}
-            />
-          </div>
-        ) : (
-          <div className="mb-3">
-            <InputItem
-              id="password"
-              type="password"
-              errors={errors}
-              labelText="密碼"
-              register={register}
-              rules={{
-                required: "使用者名稱為密碼",
-                minLength: {
-                  value: 5,
-                  message: "密碼不得小於10個字元",
-                },
-                disabled: true,
-              }}
-            />
-          </div>
-        )}
-
-        <div className="mb-3">
-          <CheckBoxRadioItem
-            type="checkbox"
-            name="isCheckPass"
-            id="isCheckPass"
-            value={true}
-            register={register}
-            errors={errors}
-            rules={{ required: false }}
-            labelText="更改密碼"
+            name="username"
+            className={`form-control `}
+            readOnly
+            defaultValue={state.username}
           />
         </div>
 
         <div className="mb-3">
-          <SelectItem
+          <label htmlFor="password" className="form-label">
+            密碼
+          </label>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            className={`form-control `}
+            readOnly
+            defaultValue={state.password}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="role" className="form-label">
+            角色
+          </label>
+          <select
             id="role"
-            labelText="角色"
-            errors={errors}
-            register={register}
-            rules={{
-              required: "角色為必填",
-            }}
+            className={`form-select`}
+            disabled="true"
+            defaultValue={state.role}
+            // value={state.role}
           >
-            <option value="">請選擇角色</option>
-            {roles.map((role, id) => {
+            {Roles.map((role, id) => {
               return (
                 <option value={role} key={id}>
                   {role}
                 </option>
               );
             })}
-          </SelectItem>
+          </select>
         </div>
 
         <div className="mb-3">
           <div className="form-label">性別</div>
-          <CheckBoxRadioItem
-            type="radio"
-            name="sexual"
-            id="men"
-            value="men"
-            register={register}
-            errors={errors}
-            rules={{ required: "請選擇您的性別" }}
-            labelText="男"
-          />
-          <CheckBoxRadioItem
-            type="radio"
-            name="sexual"
-            id="female"
-            value="female"
-            register={register}
-            errors={errors}
-            rules={{ required: "請選擇您的性別" }}
-            labelText="女"
-          />
-          <CheckBoxRadioItem
-            type="radio"
-            name="sexual"
-            id="other"
-            value="other"
-            register={register}
-            errors={errors}
-            rules={{ required: "請選擇您的性別" }}
-            labelText="其他"
-          />
+
+          <div className="form-check">
+            <input
+              className={`form-check-input`}
+              type="radio"
+              name="sexual"
+              id="men"
+              defaultValue="men"
+              checked={state.sexual === "men"}
+              disabled={true}
+            />
+            <label className="form-check-label" htmlFor="men">
+              男
+            </label>
+          </div>
+
+          <div className="form-check">
+            <input
+              className={`form-check-input`}
+              type="radio"
+              name="sexual"
+              id="female"
+              defaultValue="female"
+              checked={state.sexual === "female"}
+              disabled={true}
+            />
+            <label className="form-check-label" htmlFor="female">
+              女
+            </label>
+          </div>
+
+          <div className="form-check">
+            <input
+              className={`form-check-input`}
+              type="radio"
+              name="sexual"
+              id="other"
+              defaultValue="other"
+              checked={state.sexual === "other"}
+              disabled={true}
+            />
+            <label className="form-check-label" htmlFor="other">
+              其他
+            </label>
+          </div>
         </div>
 
         <div className="mb-3">
-          <TextArea
+          <label htmlFor="brief">自我介紹</label>
+          <textarea
             id="brief"
-            labelText="自我介紹"
-            register={register}
-            errors={errors}
-            rules={{
-              maxLength: {
-                value: 100,
-                message: "自我介紹不超過 100 字",
-              },
-            }}
-            row="5"
+            rows="5"
+            className={`form-control `}
+            defaultValue={state.brief}
+            name="brief"
           />
         </div>
-
-        <div className="row row-cols-2 g-0 ">
-          <div className="col-6">
-            <button type="submit" className="btn btn-info">
-              更新
-            </button>
-          </div>
-
-          <div className="col-6">
-            <button
-              type="button"
-              className="btn btn-info"
-              onClick={closeProfileModal}
-            >
-              關閉
-            </button>
-          </div>
-        </div>
       </form>
+      <div className="row row-cols-2 g-0 ">
+        <div className="col-6">
+          <button
+            type="submit"
+            className="btn btn-info"
+            onClick={openProfileModal}
+          >
+            更新
+          </button>
+        </div>
+      </div>
+
+      <EditModal
+        modalRef={profileModalRef}
+        modalTitle={"修改個人資料"}
+        closeModal={closeProfileModal}
+        footer="false"
+      >
+        <ProfileEdit closeProfileModal={closeProfileModal} />
+      </EditModal>
     </>
   );
 }

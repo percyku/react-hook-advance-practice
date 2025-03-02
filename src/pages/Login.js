@@ -1,12 +1,15 @@
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { useForm, useWatch } from "react-hook-form";
 import InputItem from "../components/form/InputItem";
 import SelectItem from "../components/form/SelectItem";
 import CheckBoxRadioItem from "../components/form/CheckBoxRadioItem";
+import { UserContext, Roles, userRegister } from "../store";
 //import AuthService from "../services/auth.service";
 
 function Login() {
-  const [roles, setRoles] = useState(["STUDENT", "INSTRUCTOR"]);
+  const navigate = useNavigate();
+  const [state, dispatch] = useContext(UserContext);
   const [errorMsg, setErrorMsg] = useState("");
   const {
     register,
@@ -24,7 +27,7 @@ function Login() {
   });
 
   const onSubmit = async (data) => {
-    console.log("submit", data);
+    console.log("Login submit", data);
 
     //just try to connect background test
     // const baToken = "Basic " + window.btoa(data.username + ":" + data.password);
@@ -41,6 +44,33 @@ function Login() {
     //   console.log("error", e.message);
     //   setErrorMsg("登入異常");
     // }
+
+    let checked = false;
+    let tmpUser = {};
+    userRegister.forEach((item) => {
+      // console.log("forEach", item);
+      if (
+        data.username === item.username &&
+        data.password === item.password &&
+        data.role === item.role
+      ) {
+        tmpUser = { ...item };
+        checked = true;
+      }
+    });
+
+    if (checked) {
+      dispatch({
+        type: "LOGIN",
+        payload: {
+          ...state,
+          ...tmpUser,
+        },
+      });
+      navigate("/profile");
+    } else {
+      setErrorMsg("請再次確認輸入內容");
+    }
   };
 
   const watchForm = useWatch({
@@ -102,7 +132,7 @@ function Login() {
             }}
           >
             <option value="">請選擇角色</option>
-            {roles.map((role, id) => {
+            {Roles.map((role, id) => {
               return (
                 <option value={role} key={id}>
                   {role}

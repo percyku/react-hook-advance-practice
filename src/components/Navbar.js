@@ -1,7 +1,17 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import { React, useContext } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { UserContext } from "../store";
 
-const Navbar = ({ openModal }) => {
+const Navbar = () => {
+  const [state, dispatch] = useContext(UserContext);
+  const navigate = useNavigate();
+  const handlerLogout = () => {
+    console.log("logout");
+    dispatch({
+      type: "LOGOUT",
+    });
+    navigate("/login");
+  };
   return (
     <>
       <nav className="navbar navbar-expand-lg bg-body-tertiary mb-5">
@@ -10,17 +20,57 @@ const Navbar = ({ openModal }) => {
             Navbar
           </NavLink>
 
+          {/* {state.username !== "" && (
+            <div className="collapse navbar-collapse ">
+              <ul className="navbar-nav ">
+                <li className="nav-item">
+                <NavLink className="nav-link" to="/profile">
+                  個人資料
+                </NavLink>
+                </li>
+              </ul>
+            </div>
+          )} */}
+
           <div className="collapse navbar-collapse ">
             <ul className="navbar-nav ">
               <li className="nav-item">
-                <a className="nav-link" onClick={openModal}>
+                <NavLink className="nav-link" aria-current="page" to="/profile">
                   個人資料
-                </a>
+                </NavLink>
               </li>
             </ul>
           </div>
 
           <div className="collapse navbar-collapse justify-content-end">
+            {/* {state.username === "" && (
+              <ul className="navbar-nav">
+                <li className="nav-item">
+                  <NavLink className="nav-link" aria-current="page" to="/login">
+                    登入
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/register">
+                    註冊
+                  </NavLink>
+                </li>
+              </ul>
+            )}
+            {state.username !== "" && (
+              <ul className="navbar-nav">
+                <li className="nav-item">
+                  <a
+                    className="nav-link"
+                    aria-current="page"
+                    onClick={handlerLogout}
+                  >
+                    登出
+                  </a>
+                </li>
+              </ul>
+            )} */}
+
             <ul className="navbar-nav">
               <li className="nav-item">
                 <NavLink className="nav-link" aria-current="page" to="/login">
@@ -31,6 +81,17 @@ const Navbar = ({ openModal }) => {
                 <NavLink className="nav-link" to="/register">
                   註冊
                 </NavLink>
+              </li>
+            </ul>
+            <ul className="navbar-nav">
+              <li className="nav-item">
+                <a
+                  className="nav-link"
+                  aria-current="page"
+                  onClick={handlerLogout}
+                >
+                  登出
+                </a>
               </li>
             </ul>
           </div>
