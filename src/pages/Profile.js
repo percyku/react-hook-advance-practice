@@ -1,5 +1,12 @@
-import { React, useState, useRef, useContext } from "react";
-import { useEffect } from "react";
+import {
+  React,
+  useState,
+  useRef,
+  useEffect,
+  useContext,
+  useLayoutEffect,
+} from "react";
+import { useNavigate } from "react-router-dom";
 import { Modal } from "bootstrap";
 
 import EditModal from "../components/EditModal";
@@ -8,17 +15,24 @@ import ProfileEdit from "./ProfileEdit";
 import { UserContext, Roles } from "../store";
 
 function Profile() {
+  const navigate = useNavigate();
   const [state] = useContext(UserContext);
   const myModal = useRef(null);
   const profileModalRef = useRef(null);
   // const profileModal = useRef(null);
+
+  useLayoutEffect(() => {
+    if (state.username === "") {
+      navigate("/login");
+    }
+  }, []);
 
   useEffect(() => {
     myModal.current = new Modal(profileModalRef.current, {
       backdrop: "static",
     });
     //profileModal.current = new Modal("#EditModalId", { backdrop: "static" });
-  });
+  }, []);
 
   const openProfileModal = () => {
     myModal.current.show();

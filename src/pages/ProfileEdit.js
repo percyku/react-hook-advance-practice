@@ -6,18 +6,21 @@ import InputItem from "../components/form/InputItem";
 import SelectItem from "../components/form/SelectItem";
 import CheckBoxRadioItem from "../components/form/CheckBoxRadioItem";
 import TextArea from "../components/form/TextArea";
-import { UserContext, Roles } from "../store";
+import { UserContext, Roles, userRegister } from "../store";
 
 function ProfileEdit({ closeProfileModal }) {
   const [state, dispatch] = useContext(UserContext);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [rule, setRule] = useState({ disabled: true });
+
   console.log("ProfileEdit", state);
   const navigate = useNavigate();
-  const [passBtn, setPassBtn] = useState(false);
   const {
     register,
     handleSubmit,
     watch,
     getValues,
+    setValue,
     control,
     formState: { errors },
   } = useForm({
@@ -30,21 +33,32 @@ function ProfileEdit({ closeProfileModal }) {
   const onSubmit = async (data) => {
     console.log("ProfileEdit submit", data);
 
-    // setUserData(() => {
-    //   return { ...data };
-    // });
+    if (
+      userRegister.findIndex(
+        (item) =>
+          item.username === data.username && item.username !== state.username
+      ) != -1
+    ) {
+      setErrorMsg(`${data.username} is exist,please change other name `);
+    }
 
-    // dispatch({
-    //   type: "UPDATE_USER_DATA",
-    //   payload: {
-    //     ...state,
-    //     username: data.username,
-    //     password: data.password,
-    //     role: data.role,
-    //     sexaul: data.sexaul,
-    //     breif: data.breif,
-    //   },
-    // });
+    const index = userRegister.findIndex(
+      (item) => item.username === state.username
+    );
+
+    dispatch({
+      type: "UPDATE_USER_DATA",
+      payload: {
+        update_user_data: {
+          username: data.username,
+          password: data.password == undefined ? state.password : data.password,
+          role: data.role,
+          sexual: data.sexual,
+          brief: data.brief,
+        },
+        update_id: index,
+      },
+    });
     closeProfileModal();
     navigate("/login");
   };
@@ -54,18 +68,42 @@ function ProfileEdit({ closeProfileModal }) {
   });
 
   useEffect(() => {
-    console.log(getValues());
-    console.log(getValues("isCheckPass"));
+    // console.log(getValues());
+    // console.log(getValues("isCheckPass"));
     if (getValues("isCheckPass") === "true") {
       console.log("open");
-      setPassBtn(true);
+      setRule({
+        required: "輸入使用者密碼",
+        minLength: {
+          value: 5,
+          message: "密碼不得小於10個字元",
+        },
+        disabled: false,
+      });
     } else {
-      setPassBtn(false);
+      setValue("password", state.password);
+      setRule({
+        disabled: true,
+      });
     }
-  }, [watchForm]);
+  }, [getValues("isCheckPass")]);
+
+  const closeModal = () => {
+    // setRule({
+    //   disabled: true,
+    // });
+    // setValue("username", state.username);
+    // setValue("password", state.password);
+    // setValue("role", state.role);
+    // setValue("sexual", state.sexual);
+    // setValue("brief", state.brief);
+    // setValue("isCheckPass", false);
+    closeProfileModal();
+  };
 
   return (
     <>
+      {errorMsg && <div className="alert alert-danger">{errorMsg}</div>}
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-3">
           <InputItem
@@ -84,36 +122,16 @@ function ProfileEdit({ closeProfileModal }) {
           />
         </div>
 
-        {passBtn ? (
-          <div className="mb-3">
-            <InputItem
-              id="password"
-              type="password"
-              errors={errors}
-              labelText="密碼"
-              register={register}
-              rules={{}}
-            />
-          </div>
-        ) : (
-          <div className="mb-3">
-            <InputItem
-              id="password"
-              type="password"
-              errors={errors}
-              labelText="密碼"
-              register={register}
-              rules={{
-                required: "使用者名稱為密碼",
-                minLength: {
-                  value: 5,
-                  message: "密碼不得小於10個字元",
-                },
-                disabled: true,
-              }}
-            />
-          </div>
-        )}
+        <div className="mb-3">
+          <InputItem
+            id="password"
+            type="password"
+            errors={errors}
+            labelText="密碼"
+            register={register}
+            rules={rule}
+          />
+        </div>
 
         <div className="mb-3">
           <CheckBoxRadioItem
@@ -210,7 +228,8 @@ function ProfileEdit({ closeProfileModal }) {
             <button
               type="button"
               className="btn btn-info"
-              onClick={closeProfileModal}
+              // onClick={closeProfileModal}
+              onClick={closeModal}
             >
               關閉
             </button>

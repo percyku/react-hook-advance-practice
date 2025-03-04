@@ -1,4 +1,4 @@
-import { React, useState, useEffect, useContext } from "react";
+import { React, useState, useEffect, useLayoutEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm, useWatch } from "react-hook-form";
 import InputItem from "../components/form/InputItem";
@@ -9,6 +9,7 @@ import { UserContext, Roles, userRegister } from "../store";
 
 function Login() {
   const navigate = useNavigate();
+  //console.log("Login userRegister list:", userRegister);
   const [state, dispatch] = useContext(UserContext);
   const [errorMsg, setErrorMsg] = useState("");
   const {
@@ -77,11 +78,17 @@ function Login() {
     control,
   });
 
-  useEffect(() => {
-    console.log(getValues()); // 可以使用 getValues 取得所有、特定值
-    // console.log("errors", errors);
-    // 或是使用 setValues 寫入值
-  }, [watchForm]); // 將新變數傳入
+  useLayoutEffect(() => {
+    if (state.username !== "") {
+      navigate("/profile");
+    }
+  }, []);
+
+  // useEffect(() => {
+  //   console.log(getValues()); // 可以使用 getValues 取得所有、特定值
+  //   console.log("errors", errors);
+  //   // 或是使用 setValues 寫入值
+  // }, [watchForm]); // 將新變數傳入
 
   return (
     <>

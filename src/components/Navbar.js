@@ -20,19 +20,19 @@ const Navbar = () => {
             Navbar
           </NavLink>
 
-          {/* {state.username !== "" && (
+          {state.username !== "" && (
             <div className="collapse navbar-collapse ">
               <ul className="navbar-nav ">
                 <li className="nav-item">
-                <NavLink className="nav-link" to="/profile">
-                  個人資料
-                </NavLink>
+                  <NavLink className="nav-link" to="/profile">
+                    個人資料
+                  </NavLink>
                 </li>
               </ul>
             </div>
-          )} */}
+          )}
 
-          <div className="collapse navbar-collapse ">
+          {/* <div className="collapse navbar-collapse ">
             <ul className="navbar-nav ">
               <li className="nav-item">
                 <NavLink className="nav-link" aria-current="page" to="/profile">
@@ -40,10 +40,10 @@ const Navbar = () => {
                 </NavLink>
               </li>
             </ul>
-          </div>
+          </div> */}
 
           <div className="collapse navbar-collapse justify-content-end">
-            {/* {state.username === "" && (
+            {state.username === "" && (
               <ul className="navbar-nav">
                 <li className="nav-item">
                   <NavLink className="nav-link" aria-current="page" to="/login">
@@ -69,9 +69,9 @@ const Navbar = () => {
                   </a>
                 </li>
               </ul>
-            )} */}
+            )}
 
-            <ul className="navbar-nav">
+            {/* <ul className="navbar-nav">
               <li className="nav-item">
                 <NavLink className="nav-link" aria-current="page" to="/login">
                   登入
@@ -93,7 +93,7 @@ const Navbar = () => {
                   登出
                 </a>
               </li>
-            </ul>
+            </ul> */}
           </div>
         </div>
       </nav>
