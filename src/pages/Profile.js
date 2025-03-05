@@ -5,6 +5,7 @@ import {
   useEffect,
   useContext,
   useLayoutEffect,
+  useCallback,
 } from "react";
 import { useNavigate } from "react-router-dom";
 import { Modal } from "bootstrap";
@@ -13,8 +14,7 @@ import EditModal from "../components/EditModal";
 import ProfileEdit from "./ProfileEdit";
 
 import { UserContext, Roles } from "../store";
-// let myModal;
-// let profileModalRef;
+
 function Profile() {
   const navigate = useNavigate();
   const [state] = useContext(UserContext);
@@ -29,22 +29,36 @@ function Profile() {
   }, []);
 
   useEffect(() => {
+    console.log("initial myModal");
     myModal.current = new Modal(profileModalRef.current, {
       backdrop: "static",
     });
     //profileModal.current = new Modal("#EditModalId", { backdrop: "static" });
-  });
+  }, []);
 
-  const openProfileModal = () => {
+  // const openProfileModal = () => {
+  //   console.log("openProfileModal");
+  //   myModal.current.show();
+  //   // profileModal.current.show();
+  // };
+
+  // const closeProfileModal = () => {
+  //   console.log("closeProfileModal");
+  //   myModal.current.hide();
+  //   // profileModal.current.hide();
+  // };
+
+  const openProfileModal = useCallback(() => {
+    console.log("openProfileModal");
     myModal.current.show();
     // profileModal.current.show();
-  };
+  }, []);
 
-  const closeProfileModal = () => {
+  const closeProfileModal = useCallback(() => {
     console.log("closeProfileModal");
     myModal.current.hide();
     // profileModal.current.hide();
-  };
+  }, []);
 
   return (
     <>

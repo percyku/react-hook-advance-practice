@@ -1,4 +1,4 @@
-import { React, useState, useContext } from "react";
+import { React, useState, useContext, memo } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm, useWatch } from "react-hook-form";
@@ -9,13 +9,13 @@ import TextArea from "../components/form/TextArea";
 import Loading from "../components/Loading";
 import { UserContext, Roles, userRegister } from "../store";
 
-const ProfileEdit = ({ closeProfileModal }) => {
+const ProfileEdit = memo(({ closeProfileModal }) => {
   const navigate = useNavigate();
   const [state, dispatch] = useContext(UserContext);
   const [errorMsg, setErrorMsg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [rule, setRule] = useState({ disabled: true });
-  console.log("ProfileEdit", state);
+  // console.log("ProfileEdit", state);
   const {
     register,
     handleSubmit,
@@ -240,6 +240,6 @@ const ProfileEdit = ({ closeProfileModal }) => {
       </form>
     </>
   );
-};
+});
 
 export default ProfileEdit;
