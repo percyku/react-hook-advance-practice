@@ -41,7 +41,7 @@ export const userRegister = [
 ];
 
 export const userReducer = (state, action) => {
-  console.log(action.type, action.payload);
+  // console.log(action.type, action.payload);
   switch (action.type) {
     case "LOGIN":
       return { ...state, ...action.payload };
@@ -49,11 +49,8 @@ export const userReducer = (state, action) => {
       return { ...userInit };
     case "REGISTER":
       userRegister.push({ ...action.payload });
-
       return { ...userInit };
     case "UPDATE_USER_DATA":
-      // console.log(action.type, action.payload.update_id);
-      // console.log(action.type, action.payload.update_user_data);
       userRegister[action.payload.update_id] = action.payload.update_user_data;
       return { ...userInit };
     default:

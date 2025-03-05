@@ -13,7 +13,8 @@ import EditModal from "../components/EditModal";
 import ProfileEdit from "./ProfileEdit";
 
 import { UserContext, Roles } from "../store";
-
+// let myModal;
+// let profileModalRef;
 function Profile() {
   const navigate = useNavigate();
   const [state] = useContext(UserContext);
@@ -32,7 +33,7 @@ function Profile() {
       backdrop: "static",
     });
     //profileModal.current = new Modal("#EditModalId", { backdrop: "static" });
-  }, []);
+  });
 
   const openProfileModal = () => {
     myModal.current.show();
@@ -45,12 +46,16 @@ function Profile() {
     // profileModal.current.hide();
   };
 
-  // const saveProfileModal = async (data) => {
-  //   console.log("submit", data);
-  // };
-
   return (
     <>
+      <EditModal
+        modalRef={profileModalRef}
+        modalTitle={"修改個人資料"}
+        closeModal={closeProfileModal}
+        footer="false"
+      >
+        <ProfileEdit closeProfileModal={closeProfileModal} />
+      </EditModal>
       <form>
         <div className="mb-3">
           <label htmlFor="username" className="form-label">
@@ -157,6 +162,7 @@ function Profile() {
             rows="5"
             className={`form-control `}
             defaultValue={state.brief}
+            readOnly
             name="brief"
           />
         </div>
@@ -172,15 +178,6 @@ function Profile() {
           </button>
         </div>
       </div>
-
-      <EditModal
-        modalRef={profileModalRef}
-        modalTitle={"修改個人資料"}
-        closeModal={closeProfileModal}
-        footer="false"
-      >
-        <ProfileEdit closeProfileModal={closeProfileModal} />
-      </EditModal>
     </>
   );
 }

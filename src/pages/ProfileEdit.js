@@ -6,15 +6,16 @@ import InputItem from "../components/form/InputItem";
 import SelectItem from "../components/form/SelectItem";
 import CheckBoxRadioItem from "../components/form/CheckBoxRadioItem";
 import TextArea from "../components/form/TextArea";
+import Loading from "../components/Loading";
 import { UserContext, Roles, userRegister } from "../store";
 
-function ProfileEdit({ closeProfileModal }) {
+const ProfileEdit = ({ closeProfileModal }) => {
+  const navigate = useNavigate();
   const [state, dispatch] = useContext(UserContext);
   const [errorMsg, setErrorMsg] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [rule, setRule] = useState({ disabled: true });
-
   console.log("ProfileEdit", state);
-  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -33,34 +34,37 @@ function ProfileEdit({ closeProfileModal }) {
   const onSubmit = async (data) => {
     console.log("ProfileEdit submit", data);
 
-    if (
-      userRegister.findIndex(
-        (item) =>
-          item.username === data.username && item.username !== state.username
-      ) != -1
-    ) {
-      setErrorMsg(`${data.username} is exist,please change other name `);
-    }
-
-    const index = userRegister.findIndex(
-      (item) => item.username === state.username
-    );
-
-    dispatch({
-      type: "UPDATE_USER_DATA",
-      payload: {
-        update_user_data: {
-          username: data.username,
-          password: data.password == undefined ? state.password : data.password,
-          role: data.role,
-          sexual: data.sexual,
-          brief: data.brief,
-        },
-        update_id: index,
-      },
-    });
-    closeProfileModal();
-    navigate("/login");
+    setIsLoading(true);
+    setTimeout(() => {
+      if (
+        userRegister.findIndex(
+          (item) =>
+            item.username === data.username && item.username !== state.username
+        ) != -1
+      ) {
+        setErrorMsg(`${data.username} is exist,please change other name `);
+      } else {
+        dispatch({
+          type: "UPDATE_USER_DATA",
+          payload: {
+            update_user_data: {
+              username: data.username,
+              password:
+                data.password == undefined ? state.password : data.password,
+              role: data.role,
+              sexual: data.sexual,
+              brief: data.brief,
+            },
+            update_id: userRegister.findIndex(
+              (item) => item.username === state.username
+            ),
+          },
+        });
+        closeProfileModal();
+        navigate("/login");
+      }
+      setIsLoading(false);
+    }, 1500);
   };
 
   const watchForm = useWatch({
@@ -68,10 +72,7 @@ function ProfileEdit({ closeProfileModal }) {
   });
 
   useEffect(() => {
-    // console.log(getValues());
-    // console.log(getValues("isCheckPass"));
     if (getValues("isCheckPass") === "true") {
-      console.log("open");
       setRule({
         required: "輸入使用者密碼",
         minLength: {
@@ -103,6 +104,7 @@ function ProfileEdit({ closeProfileModal }) {
 
   return (
     <>
+      <Loading isLoading={isLoading} />
       {errorMsg && <div className="alert alert-danger">{errorMsg}</div>}
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-3">
@@ -238,6 +240,6 @@ function ProfileEdit({ closeProfileModal }) {
       </form>
     </>
   );
-}
+};
 
 export default ProfileEdit;

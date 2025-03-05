@@ -3,12 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { useForm, useWatch } from "react-hook-form";
 import InputItem from "../components/form/InputItem";
 import SelectItem from "../components/form/SelectItem";
+import Loading from "../components/Loading";
 import { Roles, userRegister, UserContext } from "../store";
 
 function Register() {
-  const [errorMsg, setErrorMsg] = useState("");
-  const [state, dispatch] = useContext(UserContext);
   const navigate = useNavigate();
+  const [state, dispatch] = useContext(UserContext);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -41,27 +43,30 @@ function Register() {
     //   console.log("error", e.status);
     //   console.log("error", e.message);
     // }
-
-    let checked = true;
-    userRegister.forEach((item) => {
-      if (data.username === item.username) {
-        checked = false;
-        setErrorMsg("此帳密已經註冊過了");
-      }
-    });
-
-    if (checked) {
-      dispatch({
-        type: "REGISTER",
-        payload: {
-          ...state,
-          username: data.username,
-          password: data.password,
-          role: data.role,
-        },
+    setIsLoading(true);
+    setTimeout(() => {
+      let checked = true;
+      userRegister.forEach((item) => {
+        if (data.username === item.username) {
+          checked = false;
+          setErrorMsg("此帳密已經註冊過了");
+        }
       });
-      navigate("/login");
-    }
+
+      if (checked) {
+        dispatch({
+          type: "REGISTER",
+          payload: {
+            ...state,
+            username: data.username,
+            password: data.password,
+            role: data.role,
+          },
+        });
+        navigate("/login");
+      }
+      setIsLoading(false);
+    }, 1500);
   };
 
   const watchForm = useWatch({
@@ -82,6 +87,8 @@ function Register() {
 
   return (
     <>
+      <Loading isLoading={isLoading} />
+
       {errorMsg && <div className="alert alert-danger">{errorMsg}</div>}
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-3">

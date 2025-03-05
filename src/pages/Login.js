@@ -4,14 +4,16 @@ import { useForm, useWatch } from "react-hook-form";
 import InputItem from "../components/form/InputItem";
 import SelectItem from "../components/form/SelectItem";
 import CheckBoxRadioItem from "../components/form/CheckBoxRadioItem";
+import Loading from "../components/Loading";
 import { UserContext, Roles, userRegister } from "../store";
 //import AuthService from "../services/auth.service";
 
 function Login() {
-  const navigate = useNavigate();
   //console.log("Login userRegister list:", userRegister);
+  const navigate = useNavigate();
   const [state, dispatch] = useContext(UserContext);
   const [errorMsg, setErrorMsg] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -46,32 +48,36 @@ function Login() {
     //   setErrorMsg("登入異常");
     // }
 
-    let checked = false;
-    let tmpUser = {};
-    userRegister.forEach((item) => {
-      // console.log("forEach", item);
-      if (
-        data.username === item.username &&
-        data.password === item.password &&
-        data.role === item.role
-      ) {
-        tmpUser = { ...item };
-        checked = true;
-      }
-    });
+    setIsLoading(true);
+    setTimeout(() => {
+      let checked = false;
+      let tmpUser = {};
+      userRegister.forEach((item) => {
+        // console.log("forEach", item);
+        if (
+          data.username === item.username &&
+          data.password === item.password &&
+          data.role === item.role
+        ) {
+          tmpUser = { ...item };
+          checked = true;
+        }
 
-    if (checked) {
-      dispatch({
-        type: "LOGIN",
-        payload: {
-          ...state,
-          ...tmpUser,
-        },
+        if (checked) {
+          dispatch({
+            type: "LOGIN",
+            payload: {
+              ...state,
+              ...tmpUser,
+            },
+          });
+          navigate("/profile");
+        } else {
+          setErrorMsg("請再次確認輸入內容");
+        }
+        setIsLoading(false);
       });
-      navigate("/profile");
-    } else {
-      setErrorMsg("請再次確認輸入內容");
-    }
+    }, 1500);
   };
 
   const watchForm = useWatch({
@@ -92,6 +98,7 @@ function Login() {
 
   return (
     <>
+      <Loading isLoading={isLoading} />
       {errorMsg && <div className="alert alert-danger">{errorMsg}</div>}
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-3">
