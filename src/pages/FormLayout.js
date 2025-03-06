@@ -1,12 +1,23 @@
-import { React, useEffect, useRef, useState } from "react";
+import { React, useEffect, useRef, useState, useContext } from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
 import { useReducer } from "react";
-import { UserContext, userReducer, userInit } from "../store";
+import {
+  UserContext,
+  userReducer,
+  userInit,
+  getCurrentUser,
+  setCurrentUser,
+} from "../store";
 
 function FormLayout() {
-  const reducer = useReducer(userReducer, userInit);
+  console.log(getCurrentUser());
+  if (getCurrentUser() == null) {
+    setCurrentUser(userInit);
+  }
+
+  const reducer = useReducer(userReducer, getCurrentUser());
 
   return (
     <>

@@ -1,6 +1,6 @@
 import { React, useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { UserContext } from "../store";
+import { getCurrentUser, userRegister, UserContext } from "../store";
 
 const Navbar = () => {
   const [state, dispatch] = useContext(UserContext);
@@ -9,6 +9,11 @@ const Navbar = () => {
     console.log("logout");
     dispatch({
       type: "LOGOUT",
+      payload: {
+        update_id: userRegister.findIndex(
+          (item) => item.username === getCurrentUser.username
+        ),
+      },
     });
     navigate("/login");
   };

@@ -67,8 +67,11 @@ function Login() {
           dispatch({
             type: "LOGIN",
             payload: {
-              ...state,
-              ...tmpUser,
+              user_data: {
+                ...state,
+                ...tmpUser,
+              },
+              isSaving: data.isCheckForm,
             },
           });
           navigate("/profile");
