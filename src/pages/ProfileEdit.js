@@ -14,7 +14,8 @@ const ProfileEdit = memo(({ closeProfileModal }) => {
   const [state, dispatch] = useContext(UserContext);
   const [errorMsg, setErrorMsg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [rule, setRule] = useState({ disabled: true });
+  const [passRule, setPassRule] = useState({ disabled: true });
+  const [accessKeyRule, setAccessKeyRule] = useState({ disabled: true });
   // console.log("ProfileEdit", state);
   const {
     register,
@@ -73,7 +74,7 @@ const ProfileEdit = memo(({ closeProfileModal }) => {
 
   useEffect(() => {
     if (getValues("isCheckPass") === "true") {
-      setRule({
+      setPassRule({
         required: "輸入使用者密碼",
         minLength: {
           value: 5,
@@ -83,11 +84,27 @@ const ProfileEdit = memo(({ closeProfileModal }) => {
       });
     } else {
       setValue("password", state.password);
-      setRule({
+      setPassRule({
         disabled: true,
       });
     }
-  }, [getValues("isCheckPass")]);
+
+    if (getValues("isCheckAcesskey") === "true") {
+      setAccessKeyRule({
+        required: "輸入使用者密碼",
+        minLength: {
+          value: 0,
+          message: "accesskey不得小於1個字元",
+        },
+        disabled: false,
+      });
+    } else {
+      setValue("accesskey", state.accessKey);
+      setAccessKeyRule({
+        disabled: true,
+      });
+    }
+  }, [getValues("isCheckPass"), getValues("isCheckAcesskey")]);
 
   const closeModal = () => {
     // setRule({
@@ -131,7 +148,7 @@ const ProfileEdit = memo(({ closeProfileModal }) => {
             errors={errors}
             labelText="密碼"
             register={register}
-            rules={rule}
+            rules={passRule}
           />
         </div>
 
@@ -145,6 +162,30 @@ const ProfileEdit = memo(({ closeProfileModal }) => {
             errors={errors}
             rules={{ required: false }}
             labelText="更改密碼"
+          />
+        </div>
+
+        <div className="mb-3">
+          <InputItem
+            id="accesskey"
+            type="text"
+            errors={errors}
+            labelText="UnSplash AccessKey"
+            register={register}
+            rules={accessKeyRule}
+          />
+        </div>
+
+        <div className="mb-3">
+          <CheckBoxRadioItem
+            type="checkbox"
+            name="isCheckAcesskey"
+            id="isCheckAcesskey"
+            value={true}
+            register={register}
+            errors={errors}
+            rules={{ required: false }}
+            labelText="更改UnSplash accesskey"
           />
         </div>
 

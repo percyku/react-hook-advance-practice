@@ -21,8 +21,9 @@ function Profile() {
   const myModal = useRef(null);
   const profileModalRef = useRef(null);
   // const profileModal = useRef(null);
+  console.log("Profile state", state);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (state.username === "") {
       navigate("/login");
     }
@@ -96,6 +97,20 @@ function Profile() {
             className={`form-control `}
             readOnly
             defaultValue={state.password}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="password" className="form-label">
+            UnSplash AccessKey
+          </label>
+          <input
+            id="accessKey"
+            type="text"
+            name="accessKey"
+            className={`form-control `}
+            readOnly
+            defaultValue={state.accessKey}
           />
         </div>
 

@@ -12,8 +12,9 @@ import {
 } from "../store";
 
 function FormLayout() {
-  console.log(getCurrentUser());
+  console.log("FormLayout", getCurrentUser());
   if (getCurrentUser() == null) {
+    console.log("FormLayout", userInit);
     setCurrentUser(userInit);
   }
 

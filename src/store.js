@@ -1,20 +1,31 @@
 import { createContext } from "react";
 
 export const userInit = {
-  username: "",
-  password: "",
-  role: "",
-  sexual: "",
-  brief: "",
+  username:
+    `${process.env.REACT_APP_USERNAME}` !== "undefined"
+      ? `${process.env.REACT_APP_USERNAME}`
+      : "",
+  password:
+    `${process.env.REACT_APP_PASSWORD}` !== "undefined"
+      ? `${process.env.REACT_APP_PASSWORD}`
+      : "",
+  role:
+    `${process.env.REACT_APP_ROLE}` !== "undefined"
+      ? `${process.env.REACT_APP_ROLE}`
+      : "",
+  sexual:
+    `${process.env.REACT_APP_SEXUAL}` !== "undefined"
+      ? `${process.env.REACT_APP_SEXUAL}`
+      : "",
+  brief:
+    `${process.env.REACT_APP_BRIEF}` !== "undefined"
+      ? `${process.env.REACT_APP_BRIEF}`
+      : "",
+  accessKey:
+    `${process.env.REACT_APP_ACCESSKEY}` !== "undefined"
+      ? `${process.env.REACT_APP_ACCESSKEY}`
+      : "",
 };
-
-// export const userInit = {
-//   username: "percy",
-//   password: "fun123",
-//   role: "STUDENT",
-//   sexual: "men",
-//   brief: "Hi I'm test123",
-// };
 
 export const userRegister = [
   {
@@ -23,6 +34,7 @@ export const userRegister = [
     role: "STUDENT",
     sexual: "men",
     brief: "Hi I'm test123",
+    accessKey: "",
   },
   {
     username: "test321",
@@ -30,13 +42,15 @@ export const userRegister = [
     role: "INSTRUCTOR",
     sexual: "female",
     brief: "Hi I'm test321",
+    accessKey: "",
   },
   {
     username: "percy",
     password: "fun123",
     role: "STUDENT",
     sexual: "men",
-    brief: "Hi I'm test123",
+    brief: "Hi I'm percy",
+    accessKey: "GAvxZ9VesndxTx_9NftqgOtZffnTB0YhfGiWGDJA-bs",
   },
 ];
 
@@ -53,7 +67,10 @@ export const userReducer = (state, action) => {
   switch (action.type) {
     case "LOGIN":
       if (action.payload.isSaving) {
+        console.log("saving setCurrentUser");
         setCurrentUser({ ...state, ...action.payload.user_data });
+      } else {
+        console.log("not saving setCurrentUser");
       }
       return { ...state, ...action.payload.user_data };
     case "LOGOUT":

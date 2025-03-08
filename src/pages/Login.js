@@ -87,7 +87,7 @@ function Login() {
     control,
   });
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (state.username !== "") {
       navigate("/profile");
     }
