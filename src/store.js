@@ -2,28 +2,26 @@ import { createContext } from "react";
 
 export const userInit = {
   username:
-    `${process.env.REACT_APP_USERNAME}` !== "undefined"
-      ? `${process.env.REACT_APP_USERNAME}`
+    process.env.REACT_APP_USERNAME !== undefined
+      ? process.env.REACT_APP_USERNAME
       : "",
   password:
-    `${process.env.REACT_APP_PASSWORD}` !== "undefined"
-      ? `${process.env.REACT_APP_PASSWORD}`
+    process.env.REACT_APP_PASSWORD !== undefined
+      ? process.env.REACT_APP_PASSWORD
       : "",
   role:
-    `${process.env.REACT_APP_ROLE}` !== "undefined"
-      ? `${process.env.REACT_APP_ROLE}`
-      : "",
+    process.env.REACT_APP_ROLE !== undefined ? process.env.REACT_APP_ROLE : "",
   sexual:
-    `${process.env.REACT_APP_SEXUAL}` !== "undefined"
-      ? `${process.env.REACT_APP_SEXUAL}`
+    process.env.REACT_APP_SEXUAL !== undefined
+      ? process.env.REACT_APP_SEXUAL
       : "",
   brief:
-    `${process.env.REACT_APP_BRIEF}` !== "undefined"
-      ? `${process.env.REACT_APP_BRIEF}`
+    process.env.REACT_APP_BRIEF !== undefined
+      ? process.env.REACT_APP_BRIEF
       : "",
   accessKey:
-    `${process.env.REACT_APP_ACCESSKEY}` !== "undefined"
-      ? `${process.env.REACT_APP_ACCESSKEY}`
+    process.env.REACT_APP_ACCESSKEY !== undefined
+      ? process.env.REACT_APP_ACCESSKEY
       : "",
 };
 
@@ -50,7 +48,8 @@ export const userRegister = [
     role: "STUDENT",
     sexual: "men",
     brief: "Hi I'm percy",
-    accessKey: "GAvxZ9VesndxTx_9NftqgOtZffnTB0YhfGiWGDJA-bs",
+    // accessKey: "GAvxZ9VesndxTx_9NftqgOtZffnTB0YhfGiWGDJA-bs",
+    accessKey: "FBtqwP-G4BL8OApIKPdjFnbxMBg_FeKkAVC9qIdXZLc",
   },
 ];
 
